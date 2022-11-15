@@ -6,7 +6,10 @@ using TMPro;
 public class GridDebugObject : MonoBehaviour
 {
     private GridObject gridObject;
-    [SerializeField] TextMeshPro textMeshPro;
+    [SerializeField] TextMeshPro GridPosition;
+    [SerializeField] TextMeshPro G;
+    [SerializeField] TextMeshPro H;
+    [SerializeField] TextMeshPro F;
 
     private void Start()
     {
@@ -24,7 +27,10 @@ public class GridDebugObject : MonoBehaviour
 
     private void updateGridText()
     {
-        textMeshPro.text = gridObject.getGridObjectPosition();
+        GridPosition.text = gridObject.getGridObjectPosition();
+        F.text = gridObject.gridPosition.fcost.ToString();
+        G.text = gridObject.gridPosition.gcost.ToString();
+        H.text = gridObject.gridPosition.hcost.ToString();
     }
 
 }

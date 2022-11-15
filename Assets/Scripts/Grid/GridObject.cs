@@ -4,9 +4,15 @@ using UnityEngine;
 
 public class GridObject 
 {
-    GridPosition gridPosition;
+    public GridPosition gridPosition;
+    public GridPosition cameFromGridPosition;
+    public GridObject cameFromGridObject;
+
     GameObject gameObjectOnTopOfThisGrid;
     GridSystem gridSystem;
+
+
+    GridObject cameFromNode;
 
 
     public GridObject(GridPosition gridPosition, GameObject gameObjectOnTopOfThisGrid)
@@ -32,8 +38,19 @@ public class GridObject
         }
     }
 
-    public GridPosition GetGridPosition()
+    public override bool Equals(object obj)
     {
-        return gridPosition;
+        return obj is GridObject position &&
+               gridPosition == position.gridPosition;
+    }
+
+    public override int GetHashCode()
+    {
+        return base.GetHashCode();
+    }
+
+    public override string ToString()
+    {
+        return base.ToString();
     }
 }

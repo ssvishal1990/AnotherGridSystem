@@ -10,6 +10,7 @@ public class LevelGrid : MonoBehaviour
     [SerializeField] float cellSize = 2f;
 
     private GridSystem gridSystem;
+    private Grid[,] grid;
 
     [SerializeField] private Transform gridDebugObjectPrefab;
 
@@ -42,6 +43,26 @@ public class LevelGrid : MonoBehaviour
     public int getHeight() => gridSystem.getHeight();
 
     public int getWidth() => gridSystem.getWidhth();
+
+    public GridObject[,] getGrid() => gridSystem.getGrid();
+
+    public GridObject GetGridObject(GridPosition gridPosition) => gridSystem.GetGridObject(gridPosition);
+
+    /// <summary>
+    /// Get Grid Object at a specific position
+    /// </summary>
+    /// <param name="position"></param>
+    /// <returns></returns>
+    public GridObject GetGridObject(Vector3 position)
+    {
+        return gridSystem.GetGridObject(gridSystem.GetGridPosition(position));
+    }
+
+    /// <summary>
+    /// Get Grid Object with a specific index
+    /// </summary>
+    /// <returns></returns>
+    public GridObject GetGridObject(int x, int y) => gridSystem.GetGridObject((int)x, (int)y);
 
     public List<GridPosition> GetAllGridPositions() => gridSystem.getAllGridPositions();
 

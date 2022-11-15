@@ -14,6 +14,10 @@ public class GridSystemVisual : MonoBehaviour
 
     private bool gridVisible = false;
 
+
+    [SerializeField] private Material defaultMaterial;
+    [SerializeField] private Material pathMaterial;
+
     private void Awake()
     {
         if (Instance != null)
@@ -85,6 +89,31 @@ public class GridSystemVisual : MonoBehaviour
         HideAllGridPosition();
 
         showGridPositionList(LevelGrid.Instance.GetAllGridPositions());
+    }
+
+
+    public void updatePathMaterialOnSearchingOrClearing(List<GridObject> path, bool newPath)
+    {
+        foreach (GridObject obj in path)
+        {
+            GridPosition gridPosition = obj.gridPosition;
+            foreach (Transform child in gridSystemVisualSingles[gridPosition.x, gridPosition.z].transform)
+            {
+                if (child.name.Equals("Quad"))
+                {
+                    MeshRenderer meshRenderer = child.GetComponent<MeshRenderer>();
+                    if (newPath)
+                    {
+                        meshRenderer.material = pathMaterial;
+                    }
+                    else
+                    {
+                        meshRenderer.material = defaultMaterial;
+                    }
+                    
+                }
+            }
+        }
     }
 
 }

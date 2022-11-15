@@ -78,6 +78,13 @@ public class GridSystem
         return gridObjectArray[gridPosition.x, gridPosition.z];
     }
 
+
+    public GridObject GetGridObject(int x, int y)
+    {
+        return gridObjectArray[x, y];
+    }
+
+
     public bool isValidGridPosition(GridPosition gridPosition)
     {
         return gridPosition.x >= 0 &&
@@ -103,10 +110,15 @@ public class GridSystem
         {
             for (int z = 0; z < height; z++)
             {
-                gridPositions.Add(gridObjectArray[x, z].GetGridPosition());
+                gridPositions.Add(gridObjectArray[x, z].gridPosition);
             }
         }
         return gridPositions;
+    }
+
+    public GridObject[,] getGrid()
+    {
+        return gridObjectArray;
     }
 
 
