@@ -97,6 +97,7 @@ public class GridSystemVisual : MonoBehaviour
         foreach (GridObject obj in path)
         {
             GridPosition gridPosition = obj.gridPosition;
+            //Debug.Log($"Grid system visual for position object :: {gridPosition}");
             foreach (Transform child in gridSystemVisualSingles[gridPosition.x, gridPosition.z].transform)
             {
                 if (child.name.Equals("Quad"))

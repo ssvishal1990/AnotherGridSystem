@@ -6,7 +6,7 @@ public class Pathfinding
 {
     private const int MOVE_STRAIGHT_COST = 10;
     private const int MOVE_DIAGONAL_COST = 14;
-    private const int MAX_MOVE_DISTANCE = 100;
+    private const int MAX_MOVE_DISTANCE = 500;
 
     private GridObject[,] grid;
     private int gridWidth;
@@ -14,30 +14,35 @@ public class Pathfinding
 
     private List<GridObject> openList;
     private List<GridObject> closedList;
-    
+    private List<GridObject> path;
+
+
 
     public Pathfinding()
     {
         grid = LevelGrid.Instance.getGrid();
         gridWidth = LevelGrid.Instance.getWidth();
         gridHeight = LevelGrid.Instance.getHeight();
+        path = new List<GridObject>();
     }
 
     public List<GridObject> FindPath(int startX, int startY, int endX, int endY)
     {
+        //Graph Setup
         GridObject startNode = LevelGrid.Instance.GetGridObject(startX, startY);
         GridObject endNode = LevelGrid.Instance.GetGridObject(endX, endY);
 
         openList = new List<GridObject>() { startNode };
         closedList = new List<GridObject>();
 
-        Debug.Log($"Inside Find path Current Grid Props  H : {gridHeight} ,W :{gridWidth}");
+        //Debug.Log($"Inside Find path Current Grid Props  H : {gridHeight} ,W :{gridWidth}");
         for (int x = 0; x < gridWidth; x++)
         {
             for (int y = 0; y < gridHeight; y++)
             {
                 GridObject pathNodeGridObject = LevelGrid.Instance.GetGridObject(x, y);
                 GridPosition pathNode = pathNodeGridObject.gridPosition ;
+                //Debug.Log($"Setting up grid position : {pathNode}");
                 pathNode.gcost = MAX_MOVE_DISTANCE;
                 pathNode.calculateFcost();
                 pathNodeGridObject.cameFromGridPosition = null;
@@ -49,13 +54,15 @@ public class Pathfinding
         startNode.gridPosition.hcost = CalculateDistanceCost(startNode.gridPosition, endNode.gridPosition);
         startNode.gridPosition.calculateFcost();
 
+
+        //Cycling Through Graph
         while (openList.Count > 0)
         {
             GridObject currentNode = getLowestFCostPathNode(openList);
             if (currentNode == endNode)
             {
                 // Reached the destination
-                return CalculatePath(endNode);
+                return CalculatePath(endNode, startNode);
             }
 
             openList.Remove(currentNode);
@@ -66,6 +73,11 @@ public class Pathfinding
                 if (closedList.Contains(neighbourNode))
                 {
                     continue;
+                }
+                if (neighbourNode.gridPosition.x == endNode.gridPosition.x && neighbourNode.gridPosition.z == endNode.gridPosition.z)
+                {
+                    int tentativeGCost2 = currentNode.gridPosition.gcost + CalculateDistanceCost(currentNode.gridPosition, neighbourNode.gridPosition);
+                    Debug.Log($"tentative G cost of current and it's neighbour end node :: {tentativeGCost2}  , {neighbourNode.gridPosition.gcost} ");
                 }
                 openList.Add(neighbourNode);
 
@@ -147,15 +159,28 @@ public class Pathfinding
         return neighbourList;
     }
 
-    private List<GridObject> CalculatePath(GridObject endNode)
+    private List<GridObject> CalculatePath(GridObject endNode, GridObject startNode)
     {
-        List<GridObject> path = new List<GridObject>();
+        path.Clear();
         path.Add(endNode);
 
         GridObject currentNode = endNode;
+        //Debug.Log($"Node : {currentNode} is connected to {currentNode.cameFromGridObject}");
         while (currentNode.cameFromGridObject != null)
         {
+            if (path.Count > 100)
+            {
+                Debug.Log("Some size issue here");
+                path.Clear();
+                return path;
+            }
+            //Debug.Log($"Node : {currentNode} is connected to { currentNode.cameFromGridObject}");
             path.Add(currentNode.cameFromGridObject);
+
+            if (currentNode.cameFromGridObject == startNode)
+            {
+                break;
+            }
             currentNode = currentNode.cameFromGridObject;
         }
         path.Reverse();

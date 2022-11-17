@@ -81,6 +81,7 @@ public class GridSystem
 
     public GridObject GetGridObject(int x, int y)
     {
+        //Debug.Log($"Mouse int obtained x: {x}, y: {y}");
         return gridObjectArray[x, y];
     }
 

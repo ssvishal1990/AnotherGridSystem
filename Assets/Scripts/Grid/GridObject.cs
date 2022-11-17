@@ -51,6 +51,6 @@ public class GridObject
 
     public override string ToString()
     {
-        return base.ToString();
+        return gridPosition.ToString();
     }
 }
